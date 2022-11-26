@@ -1,15 +1,16 @@
-name: arb_cleaner
-description: A sample command-line application.
-version: 1.0.0
-# homepage: https://www.example.com
+name: translations_cleaner
+description: Package to remove unused keys in arb files, across all translations
+version: 0.0.1
+repository: https://github.com/Chinmay-KB/translations_cleaner
 
 environment:
   sdk: '>=2.17.6 <3.0.0'
 
-# dependencies:
-#   path: ^1.8.0
+dependencies: 
+  args: ^2.3.1
+  glob: ^2.1.0
+
+
 
 dev_dependencies:
   lints: ^2.0.0
-  test: ^1.16.0
-dependencies: {args: ^2.3.1, console_bars: ^1.0.5, glob: ^2.1.0}
