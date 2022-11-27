@@ -12,9 +12,28 @@ Dart package to search and delete unused translations from `.arb` files, for all
 # Add translations_cleaner as a dev dependency
 dart pub add --dev translations_cleaner
 
-# Run the command to clean all the translations
-flutter pub run translations_cleaner
+dart run translations_cleaner <command> [arguments]
+# OR
+flutter pub run translations_cleaner <command> [arguments]
+
 ```
+
+### Commands Available
+
+- `clean-translations` - Search all the translations listed in arb files and delete the unused translations
+- `list-unused-terms` - Search all the translations listed in arb files and print/save a list of unused translations.
+
+### Options Available
+
+Available only for `list-unused-terms`
+
+- `-a, --[no-]abort-on-unused` - Abort execution if unused translations are found. This can be helpful in CI, if you don't want to proceed if a build should fail.
+
+Available for both commands
+
+- `-h, --help` - Print this usage information.
+- `-o, --output-path` - Path for saving exported file, defaults to root path of the folder
+- `-e, --[no-]export ` - Save unused keys as a .txt file in the path provided
 
 ## Why 🤔
 

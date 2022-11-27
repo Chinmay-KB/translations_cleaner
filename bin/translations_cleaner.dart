@@ -1,16 +1,14 @@
-import 'package:translations_cleaner/src/delete_terms.dart';
-import 'package:translations_cleaner/src/project_files.dart';
-import 'package:translations_cleaner/src/translation_files.dart';
-import 'package:translations_cleaner/src/translation_terms.dart';
-import 'package:translations_cleaner/src/unused_terms.dart';
+import 'package:args/command_runner.dart';
+
+import 'commands/clean_translation.dart';
+import 'commands/list_unused_translations.dart';
 
 void main(List<String> arguments) {
-  print('FETCHING ALL THE TRANSLATION TERMS 🌏');
-  final terms = getTranslationTerms();
-  print('FETCHING ALL THE DART FILES TO LOOK THROUGH 🏗');
-  final dartFiles = getDartFiles();
-  print('LOOKING THROUGH FILES TO FIND UNUSED TERMS 👀');
-  final notUsed = findUnusedTerms(terms, dartFiles);
-  print('DELETING ALL THE UNUSED TERMS 🗑');
-  deleteTerms(translationFiles(), notUsed);
+  CommandRunner(
+      'dart pub run translations_cleaner',
+      'Dart package to clean unused '
+          'translations from the arb files')
+    ..addCommand(CleanTranslation())
+    ..addCommand(ListUnusedTranslations())
+    ..run(arguments);
 }

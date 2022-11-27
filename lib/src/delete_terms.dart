@@ -1,12 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:args/args.dart';
+import 'package:translations_cleaner/src/export_unused_terms.dart';
 import 'package:translations_cleaner/src/models/term.dart';
+import 'package:translations_cleaner/src/translation_files.dart';
+import 'package:translations_cleaner/src/unused_terms.dart';
 
 /// Delete unused terms from the dart files
-Future<void> deleteTerms(List<FileSystemEntity> files, Set<Term> terms) async {
+Future<void> deleteTerms(ArgResults? argResults) async {
+  final bool exportTerms = argResults?['export'];
+  final String? outputPath = argResults?['output-path'];
+
+  final files = translationFiles();
+  final terms = findUnusedTerms();
+
+  if (terms.isNotEmpty && exportTerms) {
+    exportUnusedTerms(terms, outputPath);
+  }
   await Future.wait(files.map((file) => _deleteTermsForFile(file, terms)));
-  print('${terms.length} terms removed from ${files.length} files each 💪🚀');
+  print('${terms.length} terms removed from ${files.length} files each 💪 🚀');
 }
 
 Future<void> _deleteTermsForFile(
