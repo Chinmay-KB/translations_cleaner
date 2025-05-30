@@ -11,6 +11,7 @@ import 'package:translations_cleaner/src/unused_terms.dart';
 Future<void> deleteTerms(ArgResults? argResults) async {
   final bool exportTerms = argResults?['export'];
   final String? outputPath = argResults?['output-path'];
+  final int indent = argResults?['indent'] ?? 2;
 
   final files = translationFiles();
   final terms = findUnusedTerms();
@@ -18,12 +19,12 @@ Future<void> deleteTerms(ArgResults? argResults) async {
   if (terms.isNotEmpty && exportTerms) {
     exportUnusedTerms(terms, outputPath);
   }
-  await Future.wait(files.map((file) => _deleteTermsForFile(file, terms)));
+  await Future.wait(files.map((file) => _deleteTermsForFile(file, terms, indent)));
   print('${terms.length} terms removed from ${files.length} files each 💪 🚀');
 }
 
 Future<void> _deleteTermsForFile(
-    FileSystemEntity arbFile, Set<Term> terms) async {
+    FileSystemEntity arbFile, Set<Term> terms, int indent) async {
   final fileString = await File(arbFile.path).readAsString();
   final Map<String, dynamic> fileJson = jsonDecode(fileString);
   for (var term in terms) {
@@ -34,5 +35,5 @@ Future<void> _deleteTermsForFile(
   }
   // Indent is being used for proper formatting
   await File(arbFile.path)
-      .writeAsString(JsonEncoder.withIndent(' ' * 4).convert(fileJson));
+      .writeAsString(JsonEncoder.withIndent(' ' * indent).convert(fileJson));
 }
