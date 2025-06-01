@@ -4,10 +4,9 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:translations_cleaner/src/export_unused_terms.dart';
 import 'package:translations_cleaner/src/models/term.dart';
+import 'package:translations_cleaner/src/indentation.dart';
 import 'package:translations_cleaner/src/translation_files.dart';
 import 'package:translations_cleaner/src/unused_terms.dart';
-
-const _defaultIndent = '    ';
 
 /// Delete unused terms from the dart files
 Future<void> deleteTerms(ArgResults? argResults) async {
@@ -22,24 +21,6 @@ Future<void> deleteTerms(ArgResults? argResults) async {
   }
   await Future.wait(files.map((file) => _deleteTermsForFile(file, terms)));
   print('${terms.length} terms removed from ${files.length} files each 💪 🚀');
-}
-
-/// Detects the indentation used in a JSON file by looking at the first
-/// indented line after the opening brace.
-String _detectIndentation(String content) {
-  final lines = content.split('\n');
-  for (var i = 1; i < lines.length; i++) {
-    final line = lines[i];
-    if (line.trim().isNotEmpty) {
-      final match = RegExp(r'^(\s+)').firstMatch(line);
-      if (match != null) {
-        return match.group(1)!;
-      }
-      break;
-    }
-  }
-  // Default to 4 spaces if no indentation detected
-  return _defaultIndent;
 }
 
 Future<void> _deleteTermsForFile(
@@ -60,7 +41,7 @@ Future<void> _deleteTermsForFile(
     }
   }
   // Preserve the original indentation from the file
-  final indent = _detectIndentation(fileString);
+  final indent = detectIndentation(fileString);
   await File(arbFile.path)
       .writeAsString(JsonEncoder.withIndent(indent).convert(fileJson));
 }
