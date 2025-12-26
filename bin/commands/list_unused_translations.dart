@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:translations_cleaner/src/export_unused_terms.dart';
+import 'package:translations_cleaner/src/subpackage_detection.dart';
 import 'package:translations_cleaner/src/unused_terms.dart';
 
 /// Command for listing and exporting unused translations
@@ -20,6 +21,12 @@ class ListUnusedTranslations extends Command {
         help: 'Abort execution if '
             'unused translations are found. This can be helpful in CI, if you '
             'don\'t want to proceed if a build should fail');
+    argParser.addFlag('include-subpackages',
+        help: 'Include arb files from subpackages (directories with their own '
+            'pubspec.yaml). By default, subpackages are excluded to avoid '
+            'false positives in monorepo setups.',
+        abbr: 's',
+        negatable: false);
   }
 
   @override
@@ -32,6 +39,7 @@ class ListUnusedTranslations extends Command {
 
   @override
   void run() async {
+    includeSubpackages = argResults?['include-subpackages'] ?? false;
     final bool abort = argResults?['abort-on-unused'];
     final bool exportTerms = argResults?['export'];
     final String? outputPath = argResults?['output-path'];

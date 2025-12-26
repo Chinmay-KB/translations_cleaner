@@ -33,7 +33,8 @@ Available for both commands
 
 - `-h, --help` - Print this usage information.
 - `-o, --output-path` - Path for saving exported file, defaults to root path of the folder
-- `-e, --[no-]export ` - Save unused keys as a .txt file in the path provided
+- `-e, --[no-]export` - Save unused keys as a .txt file in the path provided
+- `-s, --include-subpackages` - Include arb files from subpackages (directories with their own pubspec.yaml). By default, subpackages are excluded to avoid false positives in monorepo setups.
 
 ## Why 🤔
 
