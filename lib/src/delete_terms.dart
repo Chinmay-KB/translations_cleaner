@@ -7,6 +7,8 @@ import 'package:translations_cleaner/src/models/term.dart';
 import 'package:translations_cleaner/src/translation_files.dart';
 import 'package:translations_cleaner/src/unused_terms.dart';
 
+const _defaultIndent = '    ';
+
 /// Delete unused terms from the dart files
 Future<void> deleteTerms(ArgResults? argResults) async {
   final bool exportTerms = argResults?['export'];
@@ -37,7 +39,7 @@ String _detectIndentation(String content) {
     }
   }
   // Default to 4 spaces if no indentation detected
-  return '    ';
+  return _defaultIndent;
 }
 
 Future<void> _deleteTermsForFile(

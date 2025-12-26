@@ -32,7 +32,7 @@ Set<String> getSubpackageDirectories() {
 /// Checks if a file path is inside any of the subpackage directories.
 bool isInSubpackage(String filePath, Set<String> subpackageDirs) {
   for (final subDir in subpackageDirs) {
-    if (filePath.startsWith(subDir + Platform.pathSeparator)) {
+    if (p.isWithin(subDir, filePath)) {
       return true;
     }
   }
