@@ -1,5 +1,6 @@
 import 'package:args/command_runner.dart';
 import 'package:translations_cleaner/src/delete_terms.dart';
+import 'package:translations_cleaner/src/subpackage_detection.dart';
 
 /// Command for cleaning the translation files from all the unused translations
 class CleanTranslation extends Command {
@@ -12,6 +13,12 @@ class CleanTranslation extends Command {
         help: 'Save unused keys as a .txt file'
             'in the path provided',
         abbr: 'e');
+    argParser.addFlag('include-subpackages',
+        help: 'Include arb files from subpackages (directories with their own '
+            'pubspec.yaml). By default, subpackages are excluded to avoid '
+            'false positives in monorepo setups.',
+        abbr: 's',
+        negatable: false);
   }
 
   @override
@@ -23,5 +30,8 @@ class CleanTranslation extends Command {
   String get name => 'clean-translations';
 
   @override
-  void run() => deleteTerms(argResults);
+  void run() {
+    includeSubpackages = argResults?['include-subpackages'] ?? false;
+    deleteTerms(argResults);
+  }
 }
