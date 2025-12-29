@@ -22,6 +22,7 @@ flutter pub run translations_cleaner <command> [arguments]
 
 - `clean-translations` - Search all the translations listed in arb files and delete the unused translations
 - `list-unused-terms` - Search all the translations listed in arb files and print/save a list of unused translations.
+- `sort-translations` - Sorts all the translations in arb files alphabetically.
 
 ### Options Available
 
@@ -38,8 +39,8 @@ Available for both commands
 
 ## Why 🤔
 
-Translations can be a very time taking process when the app starts to scale and there are a lot many translations.
-Hence it is a good practice to clean the translations if it is not being used.
+Translations can be a very time consuming process when the app starts to scale and there are lots of translations.
+It is a good practice to clean out translations that are not being used.
 Checking for unused translations is tedious, hence this package.
 
 ## How 🤖
