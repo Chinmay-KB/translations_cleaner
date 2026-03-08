@@ -39,6 +39,8 @@ class ListUnusedTranslations extends Command {
 
   @override
   void run() async {
+    final stopwatch = Stopwatch()..start();
+
     includeSubpackages = argResults?['include-subpackages'] ?? false;
     final bool abort = argResults?['abort-on-unused'];
     final bool exportTerms = argResults?['export'];
@@ -46,6 +48,8 @@ class ListUnusedTranslations extends Command {
     final notUsed = findUnusedTerms();
     if (notUsed.isNotEmpty && abort) {
       print('❌ ${notUsed.length} unused translations found, aborting ❌');
+      stopwatch.stop();
+      _printExecutionTime(stopwatch.elapsed);
       exitCode = 1;
       exit(exitCode);
     }
@@ -57,5 +61,12 @@ class ListUnusedTranslations extends Command {
       }
       print('Total ${notUsed.length} unused keys ✅');
     }
+    stopwatch.stop();
+    _printExecutionTime(stopwatch.elapsed);
   }
+}
+
+void _printExecutionTime(Duration elapsed) {
+  final ms = elapsed.inMilliseconds;
+  print('Time taken: ${ms}ms');
 }
