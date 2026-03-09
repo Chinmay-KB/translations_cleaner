@@ -1,15 +1,22 @@
+## 0.2.0
+
+- Switched from regex to AST based searching improving search time speeds by 100x.
+
 ## 0.1.1
 
 ### Bug Fixes
+
 - Handle invalid JSON in `sort-translations` so one malformed ARB file does not abort the whole command.
 
 ## 0.1.0
 
 ### Breaking Changes
+
 - **Dart 3.x required**: Updated SDK constraint from `>=2.17.6 <3.0.0` to `>=3.0.0 <4.0.0`
 - **Subpackages excluded by default**: Arb files in subpackages (directories with their own pubspec.yaml) are now excluded by default. Use `--include-subpackages` or `-s` flag to include them.
 
 ### Bug Fixes
+
 - **Fix #10**: Preserve original indentation when writing arb files instead of forcing 4-space indent
 - **Fix #9**: Handle malformed JSON in arb files gracefully with helpful error messages instead of crashing
 - **Fix #5**: Use word boundary matching to prevent false negatives (e.g., `restorePurchases` no longer matches `restorePurchasesAsync`)

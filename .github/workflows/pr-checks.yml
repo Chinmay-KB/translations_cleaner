@@ -1,0 +1,69 @@
+name: PR checks
+
+on:
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+          cache: pub
+
+      - name: Fetch base ref
+        run: git fetch origin ${{ github.base_ref }}
+
+      - name: Check version bumped
+        run: |
+          BASE_VERSION=$(git show origin/${{ github.base_ref }}:pubspec.yaml 2>/dev/null | sed -n 's/^version: *//p' | tr -d ' \r' || echo "0.0.0")
+          CURRENT_VERSION=$(sed -n 's/^version: *//p' pubspec.yaml | tr -d ' \r')
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "::error::Could not read version from pubspec.yaml"
+            exit 1
+          fi
+          if [ "$(printf '%s\n%s' "$BASE_VERSION" "$CURRENT_VERSION" | sort -V | head -1)" = "$CURRENT_VERSION" ] && [ "$BASE_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "::error::Version $CURRENT_VERSION is not greater than base version $BASE_VERSION. Bump the version in pubspec.yaml."
+            exit 1
+          fi
+          if [ "$BASE_VERSION" = "$CURRENT_VERSION" ]; then
+            echo "::error::Version was not bumped. Base is $BASE_VERSION, current is $CURRENT_VERSION. Bump the version in pubspec.yaml."
+            exit 1
+          fi
+          echo "Version bumped: $BASE_VERSION -> $CURRENT_VERSION"
+
+      - name: Check changelog updated
+        run: |
+          CURRENT_VERSION=$(sed -n 's/^version: *//p' pubspec.yaml | tr -d ' \r')
+          if ! grep -qE "^## $CURRENT_VERSION\b" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no entry for version $CURRENT_VERSION. Add a section '## $CURRENT_VERSION' with your changes."
+            exit 1
+          fi
+          echo "CHANGELOG has entry for $CURRENT_VERSION"
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Static analysis
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
+
+      - name: Pub score (pana)
+        run: |
+          dart pub global activate pana
+          dart pub global run pana --exit-code-threshold=140
+        env:
+          PUB_HOSTED_URL: https://pub.dev
+
+      - name: Publish dry-run
+        run: dart pub publish --dry-run

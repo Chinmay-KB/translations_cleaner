@@ -142,7 +142,8 @@ class _TranslationUsageVisitor extends RecursiveAstVisitor<void> {
     }
 
     if (expression is PropertyAccess) {
-      return _localizationAccessorNames.contains(expression.propertyName.name) ||
+      return _localizationAccessorNames
+              .contains(expression.propertyName.name) ||
           _isLikelyLocalizationTarget(expression.target);
     }
 
