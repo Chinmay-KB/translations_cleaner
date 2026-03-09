@@ -7,8 +7,8 @@ import 'package:analyzer/error/error.dart';
 
 /// Returns used translation keys from Dart files using a syntax-only scan.
 ///
-/// Returns `null` when parsing fails for any file so callers can fall back
-/// to another detection strategy.
+/// Returns `null` when parsing fails for any file so callers can decide how to
+/// handle the failure.
 Set<String>? findUsedTermsWithAst(
   List<FileSystemEntity> dartFiles,
   Set<String> candidateKeys,
