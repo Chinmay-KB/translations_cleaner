@@ -47,7 +47,7 @@ Checking for unused translations is tedious, hence this package.
 
 - `translations_cleaner` looks for all the `.arb` files located in the directory, and fetches all the translations, from all the languages.
 - Then it looks for all the `.dart` files.
-- All the translation terms are looked for in these dart files
+- It parses Dart files with AST and detects key usage from localization-style member access and matching top-level functions.
 - The translations not found in the dart files are removed from the corresponding `.arb` files, including any attributes as well
 
 ## Limitations 😔
