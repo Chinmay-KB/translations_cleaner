@@ -30,7 +30,7 @@ Available only for `list-unused-terms`
 
 - `-a, --[no-]abort-on-unused` - Abort execution if unused translations are found. This can be helpful in CI, if you don't want to proceed if a build should fail.
 
-Available for both commands
+Available for `clean-translations` and `list-unused-terms`
 
 - `-h, --help` - Print this usage information.
 - `-o, --output-path` - Path for saving exported file, defaults to root path of the folder
