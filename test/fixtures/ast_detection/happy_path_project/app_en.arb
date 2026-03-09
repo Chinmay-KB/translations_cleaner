@@ -1,0 +1,8 @@
+{
+  "welcomeTitle": "Welcome",
+  "greetingWithName": "Hello {name}",
+  "bodyText": "Body copy",
+  "pageTitle": "Page title",
+  "checkoutLabel": "Checkout",
+  "unusedKey": "Unused"
+}
