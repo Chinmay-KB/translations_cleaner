@@ -2,6 +2,7 @@ import 'package:args/command_runner.dart';
 
 import 'commands/clean_translation.dart';
 import 'commands/list_unused_translations.dart';
+import 'commands/sort_translations.dart';
 
 void main(List<String> arguments) {
   CommandRunner(
@@ -10,5 +11,6 @@ void main(List<String> arguments) {
           'translations from the arb files')
     ..addCommand(CleanTranslation())
     ..addCommand(ListUnusedTranslations())
+    ..addCommand(SortTranslations())
     ..run(arguments);
 }
