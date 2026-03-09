@@ -11,8 +11,13 @@ Future<void> sortTerms(ArgResults? argResults) async {
 
   await Future.wait(files.map((file) async {
     final contents = await File(file.path).readAsString();
-    final sorted = sortContent(contents);
-    await File(file.path).writeAsString(sorted);
+    try {
+      final sorted = sortContent(contents);
+      await File(file.path).writeAsString(sorted);
+    } on FormatException catch (e) {
+      print('Error parsing ${file.path}: ${e.message}');
+      print('Skipping this file. Please fix the JSON syntax and try again.');
+    }
   }));
 }
 
