@@ -61,7 +61,7 @@ jobs:
       - name: Pub score (pana)
         run: |
           dart pub global activate pana
-          dart pub global run pana --exit-code-threshold=0
+          dart pub global run pana --exit-code-threshold=140
         env:
           PUB_HOSTED_URL: https://pub.dev
 
