@@ -1,0 +1,5 @@
+{
+  "welcomeTitle": "Welcome",
+  "greetingWithName": "Hello {name}",
+  "bodyText": "Body copy"
+}

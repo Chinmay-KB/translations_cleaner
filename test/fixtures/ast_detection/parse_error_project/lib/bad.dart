@@ -1,0 +1,3 @@
+void broken() {
+  // commentOnlyKey
+  if (
