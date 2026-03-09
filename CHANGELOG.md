@@ -1,3 +1,8 @@
+## 0.1.1
+
+### Bug Fixes
+- Handle invalid JSON in `sort-translations` so one malformed ARB file does not abort the whole command.
+
 ## 0.1.0
 
 ### Breaking Changes
