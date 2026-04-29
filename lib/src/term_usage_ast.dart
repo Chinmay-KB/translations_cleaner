@@ -24,7 +24,8 @@ Set<String>? findUsedTermsWithAst(
     );
 
     final hasSyntacticError = parseResult.errors.any(
-      (error) => error.errorCode.type == ErrorType.SYNTACTIC_ERROR,
+      (diagnostic) =>
+          diagnostic.diagnosticCode.type == DiagnosticType.SYNTACTIC_ERROR,
     );
     if (hasSyntacticError) {
       return null;
