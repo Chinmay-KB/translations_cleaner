@@ -1,3 +1,9 @@
+## 0.2.1
+
+- Widen `analyzer` constraint to `>=8.0.0 <11.0.0` so the package resolves alongside `intl_utils ^2.8.14` and modern Flutter test tooling.
+- Migrate AST scan to the renamed diagnostic API (`diagnosticCode` / `DiagnosticType`) since `errorCode` / `ErrorType` were removed in analyzer 9.0.0.
+- Raise minimum Dart SDK to `3.9.0` to match analyzer 8.x's environment constraint.
+
 ## 0.2.0
 
 - Switched from regex to AST based searching improving search time speeds by 100x.
