@@ -53,6 +53,33 @@ void main() {
         equals({'shortcutKey', 'dynamicKey', 'reallyUnused'}),
       );
     });
+
+    test('only lib is scanned by default, so test-only keys are unused', () {
+      final unused = _runInFixtureProject(
+        'test_default_project',
+        () => findUnusedTerms(),
+      );
+
+      expect(_unusedKeys(unused), equals({'usedInTest', 'reallyUnused'}));
+    });
+
+    test('source_paths can add test so test-only keys are kept', () {
+      final unused = _runInFixtureProject(
+        'source_paths_project',
+        () => findUnusedTerms(),
+      );
+
+      expect(_unusedKeys(unused), equals({'reallyUnused'}));
+    });
+
+    test('ignore_keys keeps keys the scan cannot see', () {
+      final unused = _runInFixtureProject(
+        'ignore_keys_project',
+        () => findUnusedTerms(),
+      );
+
+      expect(_unusedKeys(unused), equals({'reallyUnused'}));
+    });
   });
 }
 

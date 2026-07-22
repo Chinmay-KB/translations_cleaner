@@ -43,10 +43,14 @@ The package is a CLI tool built with `package:args` for command parsing and `pac
 - `delete_terms.dart` - Removes unused keys (and their `@key` attributes) from all arb files, preserving original indentation
 - `export_unused_terms.dart` - Writes unused keys to `unused-translations.txt`
 - `subpackage_detection.dart` - Detects subpackages (directories with pubspec.yaml) to exclude from scanning
+- `term_usage_ast.dart` - AST visitor that decides whether a key is used, based on localization roots/accessors
+- `config.dart` - Reads the optional `translations_cleaner:` section of the project's `pubspec.yaml` (`localization_roots`, `localization_accessors`) to extend the built-in root/accessor names
 - `models/term.dart` - `Term` class with key name and whether it has `@` attributes
 
 ### How Detection Works
 1. Scan `.arb` files (excluding subpackages by default), extract non-`@` keys as translation terms
 2. Scan all `lib/**.dart` files
-3. For each term, check if `term.key` matches as a whole word (using `\b` word boundaries) in any dart file
+3. Parse each Dart file with the analyzer and count a key as used only when it appears as a member on a localization-like target (e.g. `context.l10n.someKey`, `AppLocalizations.of(context).someKey`) or as a bare top-level call of the same name
 4. Terms not found in any dart file are considered unused
+
+Root/accessor names come from built-in defaults plus anything listed under `translations_cleaner:` in the project's `pubspec.yaml` (see `config.dart`). Note the analyzer constraint spans 8.x–10.x, so AST code must use APIs present across that range — e.g. `NamedType.name`, since `name2` was removed in analyzer 10.

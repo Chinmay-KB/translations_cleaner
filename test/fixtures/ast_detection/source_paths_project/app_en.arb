@@ -1,0 +1,5 @@
+{
+  "usedInLib": "Lib",
+  "usedInTest": "Test",
+  "reallyUnused": "Nope"
+}
