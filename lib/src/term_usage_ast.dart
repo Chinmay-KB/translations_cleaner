@@ -7,12 +7,17 @@ import 'package:analyzer/error/error.dart';
 
 /// Returns used translation keys from Dart files using a syntax-only scan.
 ///
+/// [extraRoots] and [extraAccessors] extend the built-in localization roots and
+/// accessor names for projects with a custom localization wrapper.
+///
 /// Returns `null` when parsing fails for any file so callers can decide how to
 /// handle the failure.
 Set<String>? findUsedTermsWithAst(
   List<FileSystemEntity> dartFiles,
-  Set<String> candidateKeys,
-) {
+  Set<String> candidateKeys, {
+  Set<String> extraRoots = const <String>{},
+  Set<String> extraAccessors = const <String>{},
+}) {
   final usedKeys = <String>{};
 
   for (final file in dartFiles) {
@@ -35,6 +40,8 @@ Set<String>? findUsedTermsWithAst(
       _TranslationUsageVisitor(
         candidateKeys: candidateKeys,
         usedKeys: usedKeys,
+        extraRoots: extraRoots,
+        extraAccessors: extraAccessors,
       ),
     );
   }
@@ -46,6 +53,8 @@ Set<String>? findUsedTermsWithAst(
 Set<String> findUsedTermsInSourceWithAst(
   String source, {
   required Set<String> candidateKeys,
+  Set<String> extraRoots = const <String>{},
+  Set<String> extraAccessors = const <String>{},
 }) {
   final parseResult = parseString(
     content: source,
@@ -57,6 +66,8 @@ Set<String> findUsedTermsInSourceWithAst(
     _TranslationUsageVisitor(
       candidateKeys: candidateKeys,
       usedKeys: usedKeys,
+      extraRoots: extraRoots,
+      extraAccessors: extraAccessors,
     ),
   );
 
@@ -67,12 +78,21 @@ class _TranslationUsageVisitor extends RecursiveAstVisitor<void> {
   _TranslationUsageVisitor({
     required this.candidateKeys,
     required this.usedKeys,
-  });
+    Set<String> extraRoots = const <String>{},
+    Set<String> extraAccessors = const <String>{},
+  })  : _rootNames = {..._defaultRootNames, ...extraRoots},
+        _accessorNames = {..._defaultAccessorNames, ...extraAccessors};
 
   final Set<String> candidateKeys;
   final Set<String> usedKeys;
 
-  static const Set<String> _localizationAccessorNames = {
+  final Set<String> _rootNames;
+  final Set<String> _accessorNames;
+
+  // Local variable names declared with a root type (`final S s = R.instance;`).
+  final Set<String> _localAliasNames = <String>{};
+
+  static const Set<String> _defaultAccessorNames = {
     'l10n',
     'loc',
     'locale',
@@ -83,12 +103,35 @@ class _TranslationUsageVisitor extends RecursiveAstVisitor<void> {
     'current',
   };
 
-  static const Set<String> _localizationRootNames = {
+  static const Set<String> _defaultRootNames = {
     'AppLocalizations',
     'S',
     'L10n',
     'I18n',
   };
+
+  @override
+  void visitVariableDeclarationList(VariableDeclarationList node) {
+    final type = node.type;
+    if (type is NamedType && _rootNames.contains(type.name.lexeme)) {
+      for (final variable in node.variables) {
+        _localAliasNames.add(variable.name.lexeme);
+      }
+    }
+    super.visitVariableDeclarationList(node);
+  }
+
+  @override
+  void visitSimpleFormalParameter(SimpleFormalParameter node) {
+    final type = node.type;
+    final name = node.name;
+    if (name != null &&
+        type is NamedType &&
+        _rootNames.contains(type.name.lexeme)) {
+      _localAliasNames.add(name.lexeme);
+    }
+    super.visitSimpleFormalParameter(node);
+  }
 
   @override
   void visitPropertyAccess(PropertyAccess node) {
@@ -133,31 +176,41 @@ class _TranslationUsageVisitor extends RecursiveAstVisitor<void> {
     }
 
     if (expression is SimpleIdentifier) {
-      return _localizationAccessorNames.contains(expression.name);
+      return _accessorNames.contains(expression.name) ||
+          _localAliasNames.contains(expression.name);
     }
 
     if (expression is PrefixedIdentifier) {
-      return _localizationAccessorNames.contains(expression.identifier.name) ||
-          _localizationAccessorNames.contains(expression.prefix.name) ||
+      return _rootNames.contains(expression.prefix.name) ||
+          _accessorNames.contains(expression.identifier.name) ||
+          _accessorNames.contains(expression.prefix.name) ||
           _isLikelyLocalizationTarget(expression.prefix);
     }
 
     if (expression is PropertyAccess) {
-      return _localizationAccessorNames
-              .contains(expression.propertyName.name) ||
+      return _accessorNames.contains(expression.propertyName.name) ||
           _isLikelyLocalizationTarget(expression.target);
     }
 
     if (expression is MethodInvocation) {
       final target = expression.target;
-      final isOfFactory = expression.methodName.name == 'of' &&
-          target is SimpleIdentifier &&
-          _localizationRootNames.contains(target.name);
+      final isOfFactory =
+          expression.methodName.name == 'of' && _isRootReference(target);
       return isOfFactory ||
-          _localizationAccessorNames.contains(expression.methodName.name) ||
+          _accessorNames.contains(expression.methodName.name) ||
           _isLikelyLocalizationTarget(target);
     }
 
+    return false;
+  }
+
+  bool _isRootReference(Expression? expression) {
+    if (expression is SimpleIdentifier) {
+      return _rootNames.contains(expression.name);
+    }
+    if (expression is PrefixedIdentifier) {
+      return _rootNames.contains(expression.identifier.name);
+    }
     return false;
   }
 }

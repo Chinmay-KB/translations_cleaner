@@ -1,0 +1,3 @@
+name: ignore_keys_project
+translations_cleaner:
+  ignore_keys: [keptViaIgnore]

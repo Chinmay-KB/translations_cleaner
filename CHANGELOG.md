@@ -1,3 +1,9 @@
+## 0.3.0
+
+- Add optional `translations_cleaner:` section in `pubspec.yaml` to configure custom `localization_roots` and `localization_accessors`, merged with the built-in defaults so custom accessors (e.g. `context.R.someKey`) are no longer reported as unused.
+- Add `source_paths` config (default `[lib]`) so directories like `test` can be scanned, keeping keys used only in tests.
+- Add `ignore_keys` config to always keep keys the syntax scan cannot see (generated or dynamic usages).
+
 ## 0.2.1
 
 - Widen `analyzer` constraint to `>=8.0.0 <11.0.0` so the package resolves alongside `intl_utils ^2.8.14` and modern Flutter test tooling.

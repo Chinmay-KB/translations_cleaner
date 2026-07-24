@@ -1,6 +1,6 @@
 name: translations_cleaner
 description: Package to remove unused keys in arb files, across all translations
-version: 0.2.1
+version: 0.3.0
 repository: https://github.com/Chinmay-KB/translations_cleaner
 
 environment:
@@ -11,6 +11,7 @@ dependencies:
   analyzer: ">=8.0.0 <11.0.0"
   glob: ^2.1.0
   path: ^1.8.0
+  yaml: ^3.1.2
 
 dev_dependencies:
   lints: ^2.0.0

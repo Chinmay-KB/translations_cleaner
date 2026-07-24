@@ -1,0 +1,3 @@
+name: source_paths_project
+translations_cleaner:
+  source_paths: [lib, test]
