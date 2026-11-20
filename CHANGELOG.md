@@ -1,3 +1,8 @@
+## 0.2.2
+
+- Widen `analyzer` constraint to `>=8.0.0 <15.0.0` so the package supports the latest analyzer (14.x) and passes pub.dev's "up-to-date dependencies" check.
+- No functional source changes: the AST scan is verified against analyzer 8.0.0 and 14.7.0. Applied `dart format` (whitespace only) so pub.dev static analysis stays at full marks.
+
 ## 0.2.1
 
 - Widen `analyzer` constraint to `>=8.0.0 <11.0.0` so the package resolves alongside `intl_utils ^2.8.14` and modern Flutter test tooling.
