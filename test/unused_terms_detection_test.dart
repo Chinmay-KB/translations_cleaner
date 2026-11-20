@@ -56,7 +56,8 @@ void main() {
   });
 }
 
-Set<String> _unusedKeys(Set<Term> terms) => terms.map((term) => term.key).toSet();
+Set<String> _unusedKeys(Set<Term> terms) =>
+    terms.map((term) => term.key).toSet();
 
 T _runInFixtureProject<T>(String fixtureName, T Function() action) {
   final tempDir = Directory.systemTemp.createTempSync(

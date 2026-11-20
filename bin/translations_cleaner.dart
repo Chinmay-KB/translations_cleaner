@@ -8,7 +8,8 @@ void main(List<String> arguments) {
   CommandRunner(
       'dart pub run translations_cleaner',
       'Dart package to clean unused '
-          'translations from the arb files')
+          'translations from the arb files',
+    )
     ..addCommand(CleanTranslation())
     ..addCommand(ListUnusedTranslations())
     ..addCommand(SortTranslations())

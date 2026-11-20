@@ -24,7 +24,9 @@ Future<void> deleteTerms(ArgResults? argResults) async {
 }
 
 Future<void> _deleteTermsForFile(
-    FileSystemEntity arbFile, Set<Term> terms) async {
+  FileSystemEntity arbFile,
+  Set<Term> terms,
+) async {
   final fileString = await File(arbFile.path).readAsString();
   Map<String, dynamic> fileJson;
   try {
@@ -42,6 +44,7 @@ Future<void> _deleteTermsForFile(
   }
   // Preserve the original indentation from the file
   final indent = detectIndentation(fileString);
-  await File(arbFile.path)
-      .writeAsString(JsonEncoder.withIndent(indent).convert(fileJson));
+  await File(
+    arbFile.path,
+  ).writeAsString(JsonEncoder.withIndent(indent).convert(fileJson));
 }
