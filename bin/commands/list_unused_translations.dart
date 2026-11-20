@@ -8,25 +8,37 @@ import 'package:translations_cleaner/src/unused_terms.dart';
 /// Command for listing and exporting unused translations
 class ListUnusedTranslations extends Command {
   ListUnusedTranslations() {
-    argParser.addOption('output-path',
-        abbr: 'o',
-        help: 'Path for saving exported '
-            'file, defaults to root path of the folder');
-    argParser.addFlag('export',
-        help: 'Save unused keys as a .txt file'
-            'in the path provided',
-        abbr: 'e');
-    argParser.addFlag('abort-on-unused',
-        abbr: 'a',
-        help: 'Abort execution if '
-            'unused translations are found. This can be helpful in CI, if you '
-            'don\'t want to proceed if a build should fail');
-    argParser.addFlag('include-subpackages',
-        help: 'Include arb files from subpackages (directories with their own '
-            'pubspec.yaml). By default, subpackages are excluded to avoid '
-            'false positives in monorepo setups.',
-        abbr: 's',
-        negatable: false);
+    argParser.addOption(
+      'output-path',
+      abbr: 'o',
+      help:
+          'Path for saving exported '
+          'file, defaults to root path of the folder',
+    );
+    argParser.addFlag(
+      'export',
+      help:
+          'Save unused keys as a .txt file'
+          'in the path provided',
+      abbr: 'e',
+    );
+    argParser.addFlag(
+      'abort-on-unused',
+      abbr: 'a',
+      help:
+          'Abort execution if '
+          'unused translations are found. This can be helpful in CI, if you '
+          'don\'t want to proceed if a build should fail',
+    );
+    argParser.addFlag(
+      'include-subpackages',
+      help:
+          'Include arb files from subpackages (directories with their own '
+          'pubspec.yaml). By default, subpackages are excluded to avoid '
+          'false positives in monorepo setups.',
+      abbr: 's',
+      negatable: false,
+    );
   }
 
   @override

@@ -47,17 +47,11 @@ Set<String> findUsedTermsInSourceWithAst(
   String source, {
   required Set<String> candidateKeys,
 }) {
-  final parseResult = parseString(
-    content: source,
-    throwIfDiagnostics: false,
-  );
+  final parseResult = parseString(content: source, throwIfDiagnostics: false);
   final usedKeys = <String>{};
 
   parseResult.unit.visitChildren(
-    _TranslationUsageVisitor(
-      candidateKeys: candidateKeys,
-      usedKeys: usedKeys,
-    ),
+    _TranslationUsageVisitor(candidateKeys: candidateKeys, usedKeys: usedKeys),
   );
 
   return usedKeys;
@@ -143,14 +137,16 @@ class _TranslationUsageVisitor extends RecursiveAstVisitor<void> {
     }
 
     if (expression is PropertyAccess) {
-      return _localizationAccessorNames
-              .contains(expression.propertyName.name) ||
+      return _localizationAccessorNames.contains(
+            expression.propertyName.name,
+          ) ||
           _isLikelyLocalizationTarget(expression.target);
     }
 
     if (expression is MethodInvocation) {
       final target = expression.target;
-      final isOfFactory = expression.methodName.name == 'of' &&
+      final isOfFactory =
+          expression.methodName.name == 'of' &&
           target is SimpleIdentifier &&
           _localizationRootNames.contains(target.name);
       return isOfFactory ||
